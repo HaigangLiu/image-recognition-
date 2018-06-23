@@ -72,13 +72,11 @@ optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 criterion = nn.CrossEntropyLoss()
 
 num_epoch = 100
-
 guess_counter = []; 
 guess_counter_test = []
 
 
 for epoch in range(num_epoch):
-
     since = time.time()
     correct_guesses = 0
 
