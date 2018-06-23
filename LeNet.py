@@ -1,23 +1,21 @@
+import time
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
-
 from torchvision import transforms
 from torchvision.datasets import MNIST
 
 torch.backends.cudnn.benchmark = True
 
-transforms = transforms.Compose([
-                            transforms.Resize(32),
-                            transforms.ToTensor(),
-                           transforms.Normalize((0.5,), (1.0,))]
-                         )
+transforms = transforms.Compose([transforms.Resize(32),
+                                 transforms.ToTensor(),
+                                 transforms.Normalize((0.5,), (1.0,))])
 
 train_data_set = MNIST('/Users/haigangliu/ImageData/MNIST/',
                        download= True,
                        train= True,
                        transform= transforms
                       )
+
 test_data_set = MNIST('/Users/haigangliu/ImageData/MNIST/',
                       download= True,
                       train= False,
@@ -26,8 +24,9 @@ test_data_set = MNIST('/Users/haigangliu/ImageData/MNIST/',
 train_loader = torch.utils.data.DataLoader(
                  dataset = train_data_set,
                  batch_size = 300,
-                num_workers = 6,
+                 num_workers = 6,
                  shuffle = True)
+
 test_loader = torch.utils.data.DataLoader(
                 dataset=test_data_set,
                 batch_size=300,
@@ -68,34 +67,16 @@ class LeNet5(nn.Module):
         output = self.fc(output)
         return output
 
-# class LeNet5(nn.Module):
-#     def __init__(self):
-
-#         super(LeNet5, self).__init__()
-#         self.conv1 = nn.Conv2d(1, 20, 5, 1)
-#         self.conv2 = nn.Conv2d(20, 50, 5, 1)
-#         self.fc1 = nn.Linear(4*4*50, 500)
-#         self.fc2 = nn.Linear(500, 10)
-
-#     def forward(self, x):
-#         x = F.relu(F.dropout(self.conv1(x)), 0.5)
-#         x = F.max_pool2d(x, 2, 2)
-#         x = F.relu(F.dropout(self.conv2(x)), 0.5)
-#         x = F.max_pool2d(x, 2, 2)
-#         x = x.view(-1, 4*4*50)
-#         x = F.relu(self.fc1(x))
-#         x = self.fc2(x)
-#         return x
-
 model = LeNet5().to(device)
 optimizer = torch.optim.Adam(model.parameters(), lr=0.01)
 criterion = nn.CrossEntropyLoss()
 
 num_epoch = 100
-loss_counter = []; loss_counter_test = []
-guess_counter = []; guess_counter_test = []
 
-import time
+guess_counter = []; 
+guess_counter_test = []
+
+
 for epoch in range(num_epoch):
 
     since = time.time()
